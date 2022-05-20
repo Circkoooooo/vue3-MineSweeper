@@ -1,6 +1,13 @@
 # <center> MineSweeper
 
-## How To Use
+--- 
+This is a minesweeper game, which build by `Vue@next`.
+
+
+## How To Play
+###  Online
+It's deploy on the Netlify, so you can play it on the [Netlify website]().
+### Locale
 ```
 npm install
 
