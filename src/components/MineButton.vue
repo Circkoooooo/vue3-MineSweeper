@@ -11,7 +11,7 @@ const getBlockBorderClass = (block: BlockState) => {
 
 <template>
 	<button min-w-10 min-h-10 fw="bold" border="~ gray" hover:bg='#DCDCDC' :class="getBlockBorderClass(block)">
-		<span v-if="block.mine" i-carbon:face-neutral-filled></span>
+		<span v-if="block.mine" i-mdi-mine></span>
 		<span v-else>{{ block.arrondMine }}</span>
 	</button>
 </template>
