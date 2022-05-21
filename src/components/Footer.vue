@@ -4,7 +4,7 @@ import { toggleDark } from '../composables/dark'
 </script>
 <template>
 	<div mt-5>
-		开发进度:20%
+		开发进度:25%
 	</div>
 	<nav mt-6>
 		<a class="icon-btn" href="https://github.com/Huangyuanx/Vue3-MineSweeper" target="_blank" title="GitHub">
