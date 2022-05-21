@@ -30,6 +30,9 @@ export class Game {
 		this.generateMine()
 		this.calcAroundMine()
 	}
+	/**
+	 * set game area size depend on the level.
+	 */
 	setSizeByLevel = () => {
 		if (this.level === 1) {
 			this.row = this.column = 9
@@ -45,7 +48,7 @@ export class Game {
 	}
 
 	/**
-	 * 生成游戏区域和炸弹
+	 * generate the mineBlock.
 	 */
 	generateMine = () => {
 		const { row, column } = this
@@ -66,7 +69,7 @@ export class Game {
 		}
 	}
 	/**
-	 * 计算每个mine周围炸弹的个数
+	 * calculate the number around the mineBlock.
 	 */
 	calcAroundMine = () => {
 		this.state.value.forEach((row) => {
@@ -79,7 +82,12 @@ export class Game {
 				direction.forEach(([dx, dy]) => {
 					const x = block.x + dx
 					const y = block.y + dy
-					if (x < 0 || y < 0 || x >= 9 || y >= 9)
+					if (
+						x < 0 ||
+						y < 0 ||
+						x >= this.column ||
+						y >= this.row
+					)
 						return
 					if (
 						block.arrondMine !==
@@ -94,7 +102,7 @@ export class Game {
 	}
 
 	/**
-	 * 查看是否为炸弹
+	 * check the block is not a mine.
 	 * @param block
 	 */
 	checkMine = (block: BlockState) => {
