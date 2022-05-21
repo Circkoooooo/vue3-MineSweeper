@@ -15,17 +15,56 @@ export class Game {
 	state = ref<BlockState[][]>([])
 	row: number
 	column: number
+	mineNumber: number
+	level: 1 | 2 | 3
 
-	constructor(row: number, column: number) {
+	constructor(row: number, column: number, level: 1 | 2 | 3) {
 		this.row = row
 		this.column = column
-		this.reset() 
+		this.level = level
+		this.mineNumber = 0
+		this.setSizeByLevel()
+		this.reset()
 	}
 	reset = () => {
 		this.generateMine()
 		this.calcAroundMine()
 	}
+	setSizeByLevel = () => {
+		if (this.level === 1) {
+			this.row = this.column = 9
+			this.mineNumber = 10
+		} else if (this.level === 2) {
+			this.row = this.column = 16
+			this.mineNumber = 40
+		} else if (this.level === 3) {
+			this.row = 16
+			this.column = 30
+			this.mineNumber = 99
+		}
+	}
 
+	/**
+	 * 生成游戏区域和炸弹
+	 */
+	generateMine = () => {
+		const { row, column } = this
+		this.state.value = Array.from({ length: row }, (_, y) =>
+			Array.from(
+				{ length: column },
+				(_, x): BlockState => ({ x, y })
+			)
+		)
+		let number = this.mineNumber
+		while (number !== 0) {
+			const x = Math.floor(Math.random() * this.row)
+			const y = Math.floor(Math.random() * this.column)
+			if (!this.state.value[x][y].mine) {
+				this.state.value[x][y].mine = true
+				number--
+			}
+		}
+	}
 	/**
 	 * 计算每个mine周围炸弹的个数
 	 */
@@ -53,23 +92,7 @@ export class Game {
 			})
 		})
 	}
-	/**
-	 * 生成游戏区域和炸弹
-	 */
-	generateMine = () => {
-		const { row, column } = this
-		this.state.value = Array.from({ length: row }, (_, y) =>
-			Array.from(
-				{ length: column },
-				(_, x): BlockState => ({ x, y })
-			)
-		)
-		for (const row of this.state.value) {
-			for (const block of row) {
-				block.mine = Math.random() < 0.1
-			}
-		}
-	}
+
 	/**
 	 * 查看是否为炸弹
 	 * @param block
