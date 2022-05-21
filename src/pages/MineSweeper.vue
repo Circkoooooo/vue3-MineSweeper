@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import MineButton from '@/components/MineButton.vue'
 import { Game } from '@/composables'
+import MineBlock from '../components/MineBlock.vue'
+import MineMenu from '@/components/MineMenu.vue'
 
-
-const { state, checkMine } = new Game(9, 9)
+const { state, checkMine, reset } = new Game(9, 9)
 
 
 // generateMine()
@@ -16,8 +16,9 @@ const { state, checkMine } = new Game(9, 9)
 		Mine Sweeper
 		<div w-full overflow-auto mt-5>
 			<div v-for="row, y in state" :key="y" flex="~" items-center justify-center w-max m-auto>
-				<MineButton v-for="block, x in row" :block="block" :key="x" @click="checkMine(block)" border-red />
+				<MineBlock v-for="block, x in row" :block="block" :key="x" @click="checkMine(block)" border-red />
 			</div>
+			<MineMenu @click="reset"></MineMenu>
 		</div>
 	</div>
 </template >

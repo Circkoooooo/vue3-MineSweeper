@@ -19,7 +19,7 @@ export class Game {
 	constructor(row: number, column: number) {
 		this.row = row
 		this.column = column
-		this.reset()
+		this.reset() 
 	}
 	reset = () => {
 		this.generateMine()
