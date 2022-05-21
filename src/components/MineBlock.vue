@@ -1,19 +1,21 @@
 <script lang="ts" setup>
+import { getBlockBackground, getBlockTextColor, getBlockBorder } from '@/composables/minesweeper'
 
 import type { BlockState } from '@/types'
 defineProps<{ block: BlockState }>()
-
-
-const getBlockBorderClass = (block: BlockState) => {
-	return block.mine ? ['text-red', 'border-red'] : 'text-gray'
-}
+const emit = defineEmits(['clickBlock'])
 
 </script>
 
 <template>
-	<button min-w-10 min-h-10 fw="bold" border="~ gray" hover:bg='#DCDCDC' :class="getBlockBorderClass(block)">
-		<span v-if="block.mine" i-mdi-mine></span>
-		<span v-else>{{ block.arrondMine }}</span>
+	<button m="1px" flex="~" items-center justify-center min-w-9 min-h-9 fw="bold" :style="{
+		background: getBlockBackground(block), color: getBlockTextColor(block), border: getBlockBorder(block)
+	}" @click="emit('clickBlock')">
+		<div v-if="!block.revealed"></div>
+		<div v-if="block.revealed">
+			<span v-if="block.mine" i-mdi-mine></span>
+			<span v-else>{{ block.arrondMine === 0 ? '' : block.arrondMine }}</span>
+		</div>
 	</button>
 
 </template>
