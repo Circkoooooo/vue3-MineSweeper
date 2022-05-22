@@ -18,7 +18,7 @@ export class Game {
 	state = ref<BlockState[][]>([])
 	row: number
 	column: number
-	mineNumber: number
+	mineNumber: ToRef<number> = ref(0)
 	flagNumber: ToRef<number> = ref(0)
 	level: 1 | 2 | 3
 	timer: NodeJS.Timeout = {} as NodeJS.Timeout
@@ -28,7 +28,6 @@ export class Game {
 		this.row = row
 		this.column = column
 		this.level = level
-		this.mineNumber = 0
 		this.setLevel(this.level)
 	}
 	/**
@@ -45,7 +44,7 @@ export class Game {
 		}
 		this.row = setNum[0]
 		this.column = setNum[1]
-		this.mineNumber = setNum[2]
+		this.mineNumber.value = setNum[2]
 		this.reset()
 	}
 
@@ -82,7 +81,7 @@ export class Game {
 			)
 		)
 
-		let number = this.mineNumber
+		let number = this.mineNumber.value
 		while (number !== 0) {
 			const x = Math.floor(Math.random() * this.row)
 			const y = Math.floor(Math.random() * this.column)
@@ -144,11 +143,11 @@ export class Game {
 			block.mark = false
 			this.flagNumber.value--
 		} else {
-			if (this.flagNumber.value === this.mineNumber) {
+			if (this.flagNumber.value === this.mineNumber.value) {
 				message('you cant mark more than mine number', 'warning')
 				return
 			}
-			if (this.flagNumber.value + 1 === this.mineNumber) {
+			if (this.flagNumber.value + 1 === this.mineNumber.value) {
 				this.flagNumber.value++
 				if (this.checkWin()) {
 					this.winLogic()
