@@ -97,7 +97,8 @@ watchEffect(checkGameStatus)
 		<!-- en -->
 		<div v-if="ruleShow">
 			if you has seen this page, the minesweeper was begin. <br>
-			<span text-red>click</span> to open the block<span text-red> to mark the block</span><br>
+			<span text-red>click</span> to open the block,
+			<span text-red>long press</span> to mark the block<br>
 			you can press the button on the top to change the level<br>
 			the button on the bottom to reset the game
 		</div>
