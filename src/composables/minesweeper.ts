@@ -150,7 +150,9 @@ export class Game {
 			}
 			if (this.flagNumber.value + 1 === this.mineNumber) {
 				this.flagNumber.value++
-				this.checkWin()
+				if (this.checkWin()) {
+					this.winLogic()
+				}
 				return
 			}
 			block.mark = true
@@ -183,6 +185,14 @@ export class Game {
 			this.revealAroundZero(block)
 		})
 	}
+	winLogic = () => {
+		this.state.value.forEach(row => {
+			row.forEach(block => {
+				block.revealed = true
+			})
+		})
+		this.gameStatus.value = 'win'
+	}
 	/**
 	 * player click a mine, this function will be invoke.
 	 * foreach all the block, if the block is a mine, the block will be reveal.
@@ -211,13 +221,12 @@ export class Game {
 		})
 
 		const isWin = markList.every(item => item.mine)
-		if (isWin) {
-			this.gameStatus.value = 'win'
-		} else {
+		if (!isWin) {
 			message(
 				'you spend all of the flag, but you didnt win, check carefully',
 				'warning'
 			)
 		}
+		return isWin
 	}
 }

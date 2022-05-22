@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { toggleDark } from '../composables/dark'
+import config from '../../package.json'
 
 </script>
 <template>
@@ -8,16 +9,17 @@ import { toggleDark } from '../composables/dark'
 			class="icon-btn"
 			href="https://github.com/Huangyuanx/Vue3-MineSweeper"
 			target="_blank"
-			title="GitHub"
-		>
+			title="GitHub">
 			<div i="carbon-logo-github"></div>
 		</a>
 		<button
 			ml-3
 			class="icon-btn"
-			@click="toggleDark()"
-		>
+			@click="toggleDark()">
 			<div i="carbon-sun dark:carbon-moon"></div>
 		</button>
+		<div>
+			version:{{ config.version }}
+		</div>
 	</nav>
 </template>
