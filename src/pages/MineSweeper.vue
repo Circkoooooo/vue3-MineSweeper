@@ -3,16 +3,16 @@ import MineBlock from '@/components/MineBlock/MineBlock.vue'
 import Menu from '@/components/Menu.vue'
 import { Game } from '@/composables'
 import { ref, watchEffect } from 'vue'
+const { state, reset, clickBlock, setLevel, gameStatus, mineNumber, flagNumber, checkGameStatus, markMine, checkWin } = new Game(9, 9, 1)
 
-const { state, reset, clickBlock, setLevel, mineNumber, flagNumber, checkGameStatus, markMine, checkWin } = new Game(9, 9, 1)
 const ruleShow = ref(false)
 watchEffect(checkGameStatus)
-watchEffect(checkWin)
+
 </script>
 
 <template>
 	<div>
-		Mine Sweeper
+		Mine Sweeper <br>
 		<div
 			flex="~"
 			items-center
@@ -28,12 +28,19 @@ watchEffect(checkWin)
 				@clickLogic="setLevel(3)" />
 		</div>
 		<!-- NumberInfo -->
+
 		<div
 			mt-5
 			flex="~"
 			items-center
 			justify-center>
+			<div>
+				<span text-red>
+					{{ gameStatus }}
+				</span>
+			</div>
 			<div
+				ml-4
 				flex="~"
 				name="mineNumber">
 				<span i-mdi-mine />
@@ -76,8 +83,8 @@ watchEffect(checkWin)
 		<div flex="~" justify-center items-center>
 			<span flex="~" justify-center>规则</span>
 			<button @click="ruleShow = !ruleShow" ml-3 flex="~">
-				<span v-if="ruleShow" i-material-symbols:arrow-drop-down></span>
-				<span v-else i-material-symbols:arrow-drop-up></span>
+				<span v-if="ruleShow" i-material-symbols:arrow-drop-up></span>
+				<span v-else i-material-symbols:arrow-drop-down></span>
 			</button>
 		</div>
 		<div v-if="ruleShow">

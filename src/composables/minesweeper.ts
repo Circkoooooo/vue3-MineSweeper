@@ -1,5 +1,6 @@
 import { BlockState } from '@/types'
 import { ref, ToRef } from 'vue'
+import { message } from './useElementMessage'
 
 const direction: Array<number[]> = [
 	[-1, -1],
@@ -52,23 +53,24 @@ export class Game {
 		if (this.gameStatus.value !== 'play') {
 			this.gameStatus.value = 'play'
 		}
+		this.flagNumber.value = 0
 		this.generateMine()
 		this.calcAroundMine()
 	}
 
 	checkGameStatus = () => {
 		if (this.gameStatus.value === 'lose') {
-			alert('you lose')
+			message('you lose', 'warning')
 		}
 		if (this.gameStatus.value === 'win') {
-			alert('you win')
+			message('you win', 'success')
 		}
 	}
 	/**
 	 * generate the mineBlock.
 	 */
 	generateMine = () => {
-		const { row, column, flagNumber } = this
+		const { row, column } = this
 		this.state.value = Array.from({ length: row }, (_, y) =>
 			Array.from(
 				{ length: column },
@@ -89,7 +91,6 @@ export class Game {
 				number--
 			}
 		}
-		flagNumber.value = 0
 	}
 	/**
 	 * calculate the number around the mineBlock.
@@ -143,7 +144,15 @@ export class Game {
 			block.mark = false
 			this.flagNumber.value--
 		} else {
-			if (this.flagNumber.value === this.mineNumber) return
+			if (this.flagNumber.value === this.mineNumber) {
+				message('you cant mark more than mine number', 'warning')
+				return
+			}
+			if (this.flagNumber.value + 1 === this.mineNumber) {
+				this.flagNumber.value++
+				this.checkWin()
+				return
+			}
 			block.mark = true
 			this.flagNumber.value++
 		}
@@ -192,7 +201,6 @@ export class Game {
 	 * when the flag same as the mine, check if win.
 	 */
 	checkWin = () => {
-		if (this.flagNumber.value !== this.mineNumber) return
 		const markList: BlockState[] = []
 		this.state.value.forEach(row => {
 			row.forEach(block => {
@@ -205,6 +213,11 @@ export class Game {
 		const isWin = markList.every(item => item.mine)
 		if (isWin) {
 			this.gameStatus.value = 'win'
+		} else {
+			message(
+				'you spend all of the flag, but you didnt win, check carefully',
+				'warning'
+			)
 		}
 	}
 }
