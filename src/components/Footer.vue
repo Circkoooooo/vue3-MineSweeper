@@ -3,9 +3,6 @@ import { toggleDark } from '../composables/dark'
 
 </script>
 <template>
-	<div mt-5>
-		开发进度:50%
-	</div>
 	<nav mt-6>
 		<a
 			class="icon-btn"
