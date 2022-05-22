@@ -3,7 +3,7 @@ import MineBlock from '@/components/MineBlock/MineBlock.vue'
 import Menu from '@/components/Menu.vue'
 import { Game } from '@/composables'
 import { ref, watchEffect } from 'vue'
-const { state, reset, clickBlock, setLevel, gameStatus, mineNumber, flagNumber, checkGameStatus, markMine, checkWin } = new Game(9, 9, 1)
+const { state, reset, clickBlock, setLevel, gameStatus, mineNumber, flagNumber, checkGameStatus, markMine } = new Game(9, 9, 1)
 
 const ruleShow = ref(false)
 watchEffect(checkGameStatus)
@@ -96,7 +96,7 @@ watchEffect(checkGameStatus)
 		<br>
 		<!-- en -->
 		<div v-if="ruleShow">
-			if you has seen this page, the minesweeper is begin. <br>
+			if you has seen this page, the minesweeper was begin. <br>
 			<span text-red>click</span> to open the block<span text-red> to mark the block</span><br>
 			you can press the button on the top to change the level<br>
 			the button on the bottom to reset the game
