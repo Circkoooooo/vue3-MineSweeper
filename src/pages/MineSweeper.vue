@@ -4,9 +4,10 @@ import Menu from '@/components/Menu.vue'
 import { Game } from '@/composables'
 import { ref, watchEffect } from 'vue'
 
-const { state, reset, clickBlock, setLevel, mineNumber, flagNumber, checkGameStatus, markMine } = new Game(9, 9, 1)
+const { state, reset, clickBlock, setLevel, mineNumber, flagNumber, checkGameStatus, markMine, checkWin } = new Game(9, 9, 1)
 const ruleShow = ref(false)
 watchEffect(checkGameStatus)
+watchEffect(checkWin)
 </script>
 
 <template>

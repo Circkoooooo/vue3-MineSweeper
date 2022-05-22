@@ -2,7 +2,7 @@
 import './MineBlock.css'
 import type { BlockState } from '@/types'
 import { getBlockClass, getBlockTextClass } from './MineBlockClass'
-
+import { isDev } from '@/composables/minesweeper'
 defineProps<{ block: BlockState }>()
 const emit = defineEmits(['clickBlock', 'markMine'])
 </script>
@@ -19,20 +19,17 @@ const emit = defineEmits(['clickBlock', 'markMine'])
 		:class="getBlockClass(block)"
 		:style="{ color: getBlockTextClass(block) }"
 		@click.prevent="emit('clickBlock')"
-		@contextmenu.prevent="emit('markMine')"
-	>
+		@contextmenu.prevent="emit('markMine')">
 		<tamplate v-if="!block.revealed">
 			<span
 				v-if="block.mark"
 				i-material-symbols:flag
-				color="#f87171"
-			></span>
+				color="#f87171"></span>
 		</tamplate>
-		<tamplate v-if="block.revealed">
+		<tamplate v-if="block.revealed || isDev">
 			<span
 				v-if="block.mine"
-				i-mdi-mine
-			></span>
+				i-mdi-mine></span>
 			<span v-if="!block.mine">
 				{{
 						block.arrondMine === 0

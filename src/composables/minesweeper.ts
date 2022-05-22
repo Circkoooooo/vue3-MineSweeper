@@ -12,6 +12,7 @@ const direction: Array<number[]> = [
 	[1, 1],
 ]
 
+export const isDev = false
 export class Game {
 	state = ref<BlockState[][]>([])
 	row: number
@@ -67,7 +68,7 @@ export class Game {
 	 * generate the mineBlock.
 	 */
 	generateMine = () => {
-		const { row, column } = this
+		const { row, column, flagNumber } = this
 		this.state.value = Array.from({ length: row }, (_, y) =>
 			Array.from(
 				{ length: column },
@@ -78,6 +79,7 @@ export class Game {
 				})
 			)
 		)
+
 		let number = this.mineNumber
 		while (number !== 0) {
 			const x = Math.floor(Math.random() * this.row)
@@ -87,6 +89,7 @@ export class Game {
 				number--
 			}
 		}
+		flagNumber.value = 0
 	}
 	/**
 	 * calculate the number around the mineBlock.
@@ -120,7 +123,7 @@ export class Game {
 	 */
 	clickBlock = async (block: BlockState) => {
 		if (this.gameStatus.value !== 'play') return
-		if (block.revealed) return
+		if (block.revealed || block.mark) return
 		block.revealed = true
 		if (block.mine) {
 			this.loseLogic()
@@ -136,11 +139,11 @@ export class Game {
 	 */
 	markMine = (block: BlockState) => {
 		if (this.gameStatus.value !== 'play') return
-		if (this.flagNumber.value === this.mineNumber) return
 		if (block.mark) {
 			block.mark = false
 			this.flagNumber.value--
 		} else {
+			if (this.flagNumber.value === this.mineNumber) return
 			block.mark = true
 			this.flagNumber.value++
 		}
@@ -159,11 +162,11 @@ export class Game {
 			const stateBlock = this.state.value[y][x]
 
 			if (stateBlock !== undefined && stateBlock.arrondMine === 0) {
-				if (!stateBlock.revealed) {
+				if (!stateBlock.revealed && !stateBlock.mark) {
 					nextReaveal.push(stateBlock)
 					stateBlock.revealed = true
 				}
-			} else if (!stateBlock.mine) {
+			} else if (!stateBlock.mine && !stateBlock.mark) {
 				stateBlock.revealed = true
 			}
 		})
@@ -184,5 +187,24 @@ export class Game {
 			})
 		})
 		this.gameStatus.value = 'lose'
+	}
+	/**
+	 * when the flag same as the mine, check if win.
+	 */
+	checkWin = () => {
+		if (this.flagNumber.value !== this.mineNumber) return
+		const markList: BlockState[] = []
+		this.state.value.forEach(row => {
+			row.forEach(block => {
+				if (block.mark) {
+					markList.push(block)
+				}
+			})
+		})
+
+		const isWin = markList.every(item => item.mine)
+		if (isWin) {
+			this.gameStatus.value = 'win'
+		}
 	}
 }
