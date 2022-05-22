@@ -18,7 +18,7 @@ const emit = defineEmits(['clickBlock', 'markMine', 'touchStart', 'touchEnd'])
 		fw="bold"
 		:class="getBlockClass(block)"
 		:style="{ color: getBlockTextClass(block) }"
-		@click="emit('clickBlock')"
+		@click.prevent="emit('clickBlock')"
 		@contextmenu.prevent="emit('markMine')"
 	>
 		<tamplate v-if="!block.revealed">
