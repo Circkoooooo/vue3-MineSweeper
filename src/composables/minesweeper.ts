@@ -1,5 +1,6 @@
 import { BlockState } from '@/types'
 import { ref } from 'vue'
+
 const direction: Array<number[]> = [
 	[-1, -1],
 	[-1, 0],
@@ -16,7 +17,9 @@ export class Game {
 	row: number
 	column: number
 	mineNumber: number
+	flagNumber: number
 	level: 1 | 2 | 3
+	timer: NodeJS.Timeout = {} as NodeJS.Timeout
 	gameStatus: 'play' | 'lose' | 'win' = 'play'
 
 	constructor(row: number, column: number, level: 1 | 2 | 3) {
@@ -24,31 +27,33 @@ export class Game {
 		this.column = column
 		this.level = level
 		this.mineNumber = 0
+		this.flagNumber = 0
 		this.setLevel(this.level)
 	}
+	/**
+	 * set game area size depend on the level.
+	 */
+	setLevel = (select: number) => {
+		const setNum = []
+		if (select === 1) {
+			setNum.push(9, 9, 10)
+		} else if (select === 2) {
+			setNum.push(16, 16, 40)
+		} else if (select === 3) {
+			setNum.push(30, 19, 99)
+		}
+		this.row = setNum[0]
+		this.column = setNum[1]
+		this.mineNumber = this.flagNumber = setNum[2]
+		this.reset()
+	}
+
 	reset = () => {
 		if (this.gameStatus !== 'play') {
 			this.gameStatus = 'play'
 		}
 		this.generateMine()
 		this.calcAroundMine()
-	}
-	/**
-	 * set game area size depend on the level.
-	 */
-	setLevel = (select: number) => {
-		if (select === 1) {
-			this.row = this.column = 9
-			this.mineNumber = 10
-		} else if (select === 2) {
-			this.row = this.column = 16
-			this.mineNumber = 40
-		} else if (select === 3) {
-			this.row = 30
-			this.column = 16
-			this.mineNumber = 99
-		}
-		this.reset()
 	}
 
 	/**
@@ -128,6 +133,19 @@ export class Game {
 			}
 		}
 	}
+
+	/**
+	 * touchStart event on the mobile
+	 */
+	touchStart = (block: BlockState) => {
+		// this.timer = setTimeout(() => {
+		block.mark = true
+		// }, 10)
+	}
+	touchEnd = () => {
+		clearTimeout(this.timer)
+	}
+
 	/**
 	 * reveal all the block which its aroundMineNumber is 0.
 	 * @param block
@@ -176,39 +194,10 @@ export class Game {
 	}
 }
 
-const getBlockTextColor = (block: BlockState) => {
-	const selectColor: Array<[number, string]> = [
-		[1, '#3b82f6'],
-		[2, '#03d679'],
-		[3, '#f77601'],
-		[4, '#fc2c20'],
-		[5, '#d01907'],
-	]
-	let color = '#fff'
-
-	if (block.mine && block.revealed) return 'white'
-
-	for (let i = 0; i < selectColor.length; i++) {
-		if (selectColor[i][0] === block.arrondMine) {
-			color = `${selectColor[i][1]}`
-		}
-	}
-	return color
+/**
+ * invoke the mark logic.
+ * @param block
+ */
+export const markMine = (block: BlockState) => {
+	!block.mark ? (block.mark = true) : (block.mark = false)
 }
-
-const getBlockBackground = (block: BlockState) => {
-	if (block.mine && block.revealed) return '#812b2b'
-	if (!block.revealed) {
-		return '#1b1c1d'
-	} else {
-		return '#000'
-	}
-}
-const getBlockBorder = (block: BlockState) => {
-	if (block.mine && block.revealed) {
-		return '1px solid #812b2b'
-	} else {
-		return '1px solid #282a2c'
-	}
-}
-export { getBlockBackground, getBlockTextColor, getBlockBorder }

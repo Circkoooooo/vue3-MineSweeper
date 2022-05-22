@@ -1,0 +1,22 @@
+.block_reavealed.dark {
+	background-color: #000000;
+	border: 1px solid #44403c;
+}
+
+.block_unreavealed.dark {
+	background-color: #4a4a4a;
+	border: 1px solid #44403c;
+}
+
+.block_reavealed.light {
+	background-color: #f3f4f6;
+	border: 1px solid #a3a3a3;
+}
+.block_unreavealed.light {
+	background-color: #1b1c1d;
+	border: 1px solid #a3a3a3;
+}
+
+.block_unreavealed:hover {
+	background-color: #999;
+}
