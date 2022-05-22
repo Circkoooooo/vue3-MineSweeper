@@ -4,7 +4,7 @@ import type { BlockState } from '@/types'
 import { getBlockClass, getBlockTextClass } from './MineBlockClass'
 
 defineProps<{ block: BlockState }>()
-const emit = defineEmits(['clickBlock', 'markMine', 'touchStart', 'touchEnd'])
+const emit = defineEmits(['clickBlock', 'markMine'])
 </script>
 
 <template>

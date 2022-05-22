@@ -1,5 +1,5 @@
 import { BlockState } from '@/types'
-import { ref } from 'vue'
+import { ref, ToRef } from 'vue'
 
 const direction: Array<number[]> = [
 	[-1, -1],
@@ -17,17 +17,16 @@ export class Game {
 	row: number
 	column: number
 	mineNumber: number
-	flagNumber: number
+	flagNumber: ToRef<number> = ref(0)
 	level: 1 | 2 | 3
 	timer: NodeJS.Timeout = {} as NodeJS.Timeout
-	gameStatus: 'play' | 'lose' | 'win' = 'play'
+	gameStatus: ToRef<'play' | 'lose' | 'win'> = ref('play')
 
 	constructor(row: number, column: number, level: 1 | 2 | 3) {
 		this.row = row
 		this.column = column
 		this.level = level
 		this.mineNumber = 0
-		this.flagNumber = 0
 		this.setLevel(this.level)
 	}
 	/**
@@ -44,18 +43,26 @@ export class Game {
 		}
 		this.row = setNum[0]
 		this.column = setNum[1]
-		this.mineNumber = this.flagNumber = setNum[2]
+		this.mineNumber = setNum[2]
 		this.reset()
 	}
 
 	reset = () => {
-		if (this.gameStatus !== 'play') {
-			this.gameStatus = 'play'
+		if (this.gameStatus.value !== 'play') {
+			this.gameStatus.value = 'play'
 		}
 		this.generateMine()
 		this.calcAroundMine()
 	}
 
+	checkGameStatus = () => {
+		if (this.gameStatus.value === 'lose') {
+			alert('you lose')
+		}
+		if (this.gameStatus.value === 'win') {
+			alert('you win')
+		}
+	}
 	/**
 	 * generate the mineBlock.
 	 */
@@ -85,8 +92,8 @@ export class Game {
 	 * calculate the number around the mineBlock.
 	 */
 	calcAroundMine = () => {
-		this.state.value.forEach((row) => {
-			row.forEach((block) => {
+		this.state.value.forEach(row => {
+			row.forEach(block => {
 				if (block.mine) {
 					block.arrondMine = -1
 					return
@@ -95,18 +102,8 @@ export class Game {
 				direction.forEach(([dx, dy]) => {
 					const x = block.x + dx
 					const y = block.y + dy
-					if (
-						x < 0 ||
-						y < 0 ||
-						x >= this.column ||
-						y >= this.row
-					)
-						return
-					if (
-						block.arrondMine !==
-							undefined &&
-						this.state.value[y][x].mine
-					) {
+					if (x < 0 || y < 0 || x >= this.column || y >= this.row) return
+					if (block.arrondMine !== undefined && this.state.value[y][x].mine) {
 						block.arrondMine++
 					}
 				})
@@ -122,7 +119,7 @@ export class Game {
 	 * @param block
 	 */
 	clickBlock = async (block: BlockState) => {
-		if (this.gameStatus !== 'play') return
+		if (this.gameStatus.value !== 'play') return
 		if (block.revealed) return
 		block.revealed = true
 		if (block.mine) {
@@ -133,17 +130,20 @@ export class Game {
 			}
 		}
 	}
-
 	/**
-	 * touchStart event on the mobile
+	 * invoke the mark logic.
+	 * @param block
 	 */
-	touchStart = (block: BlockState) => {
-		// this.timer = setTimeout(() => {
-		block.mark = true
-		// }, 10)
-	}
-	touchEnd = () => {
-		clearTimeout(this.timer)
+	markMine = (block: BlockState) => {
+		if (this.gameStatus.value !== 'play') return
+		if (this.flagNumber.value === this.mineNumber) return
+		if (block.mark) {
+			block.mark = false
+			this.flagNumber.value--
+		} else {
+			block.mark = true
+			this.flagNumber.value++
+		}
 	}
 
 	/**
@@ -155,14 +155,10 @@ export class Game {
 		direction.forEach(([dx, dy]) => {
 			const x = dx + block.x
 			const y = dy + block.y
-			if (x < 0 || y < 0 || x >= this.column || y >= this.row)
-				return
+			if (x < 0 || y < 0 || x >= this.column || y >= this.row) return
 			const stateBlock = this.state.value[y][x]
 
-			if (
-				stateBlock !== undefined &&
-				stateBlock.arrondMine === 0
-			) {
+			if (stateBlock !== undefined && stateBlock.arrondMine === 0) {
 				if (!stateBlock.revealed) {
 					nextReaveal.push(stateBlock)
 					stateBlock.revealed = true
@@ -171,7 +167,7 @@ export class Game {
 				stateBlock.revealed = true
 			}
 		})
-		nextReaveal.forEach((block) => {
+		nextReaveal.forEach(block => {
 			this.revealAroundZero(block)
 		})
 	}
@@ -180,24 +176,13 @@ export class Game {
 	 * foreach all the block, if the block is a mine, the block will be reveal.
 	 */
 	loseLogic = () => {
-		this.state.value.forEach((row) => {
-			row.forEach((block) => {
+		this.state.value.forEach(row => {
+			row.forEach(block => {
 				if (block.mine) {
 					block.revealed = true
 				}
 			})
 		})
-		this.gameStatus = 'lose'
-		setTimeout(() => {
-			alert('you lose!')
-		}, 0)
+		this.gameStatus.value = 'lose'
 	}
-}
-
-/**
- * invoke the mark logic.
- * @param block
- */
-export const markMine = (block: BlockState) => {
-	!block.mark ? (block.mark = true) : (block.mark = false)
 }
