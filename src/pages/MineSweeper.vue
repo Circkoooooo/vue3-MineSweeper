@@ -89,12 +89,17 @@ watchEffect(checkGameStatus)
 		</div>
 		<div v-if="ruleShow">
 			当你看到这个页面的时候，<span text-green>游戏已经开始了</span><br />
-			if you has seen this page, the minesweeper is begin. <br>
-			<span text-red>点击</span>揭开扫雷区域，<span text-red>long press</span>可以设置为旗帜。<br>
-			<span text-red>click</span> to open the block<span text-red> to mark the block</span><br>
-			<br>
+			<span text-red>点击</span>揭开扫雷区域，<span text-red>长按</span>可以设置为旗帜。<br>
 			上方的三个按钮用于切换难度<br>
 			下方的按钮用于重置游戏
+		</div>
+		<br>
+		<!-- en -->
+		<div v-if="ruleShow">
+			if you has seen this page, the minesweeper is begin. <br>
+			<span text-red>click</span> to open the block<span text-red> to mark the block</span><br>
+			you can press the button on the top to change the level<br>
+			the button on the bottom to reset the game
 		</div>
 		<div v-else>
 			......
