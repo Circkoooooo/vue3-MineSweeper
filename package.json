@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc --noEmit && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@vueuse/core": "^8.5.0",
@@ -37,6 +38,7 @@
 		"unplugin-vue-components": "^0.19.5",
 		"vite": "^2.9.9",
 		"vite-plugin-eslint": "^1.6.0",
+		"vitest": "^0.12.9",
 		"vue-tsc": "^0.34.7"
 	}
 }

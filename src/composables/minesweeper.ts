@@ -20,13 +20,13 @@ export class Game {
 	column: number
 	mineNumber: ToRef<number> = ref(0)
 	flagNumber: ToRef<number> = ref(0)
-	level: 1 | 2 | 3
+	level: number
 	timer: NodeJS.Timeout = {} as NodeJS.Timeout
 	gameStatus: ToRef<'play' | 'lose' | 'win'> = ref('play')
 
-	constructor(row: number, column: number, level: 1 | 2 | 3) {
-		this.row = row
-		this.column = column
+	constructor(level: number) {
+		this.row = 0
+		this.column = 0
 		this.level = level
 		this.setLevel(this.level)
 	}
