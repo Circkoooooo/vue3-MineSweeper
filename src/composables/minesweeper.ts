@@ -124,6 +124,13 @@ export class Game {
 	clickBlock = async (block: BlockState) => {
 		if (this.gameStatus.value !== 'play') return
 		if (block.revealed || block.mark) return
+		// 无限死代码：注释掉135到141，取消注释128到133.
+		// if (!block.mine) {
+		// 	this.generateMine()
+		// 	this.clickBlock(this.state.value[block.y][block.x])
+		// } else {
+		// 	this.loseLogic()
+		// }
 		block.revealed = true
 		if (block.mine) {
 			this.loseLogic()
